@@ -117,9 +117,3 @@ Proactive_Intelligent_Traffic_Control_System
 
 - MPC significantly reduces congestion and unnecessary switching.
 
-## Installation & Setup
-
-1. **Clone the Repository**
-```bash
-git clone https://github.com/tekksick/Proactive_Intelligent_Traffic_Control_system.git
-cd Proactive_Intelligent_Traffic_Control_system
