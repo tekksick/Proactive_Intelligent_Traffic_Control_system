@@ -42,134 +42,84 @@ System Architecture
           │      MPC         │───► Optimal Signal Timings
           └──────────────────┘
 
-📂 Repository Structure
-📁 Proactive_Intelligent_Traffic_Control_System
+## Repository Structure
+Proactive_Intelligent_Traffic_Control_System
 │
-├── 📁 YOLO_Vehicle_Detection
-│   ├── training_scripts/
-│   ├── weights/
-│   └── inference/
+├── YOLO_Vehicle_Detection
+│ ├── training_scripts/
+│ ├── weights/
+│ └── inference/
 │
-├── 📁 Traffic_Forecasting_LSTM
-│   ├── dataset/
-│   ├── preprocessing/
-│   ├── model_training/
-│   └── multi_lane_forecasting/
+├── Traffic_Forecasting_LSTM
+│ ├── dataset/
+│ ├── preprocessing/
+│ ├── model_training/
+│ └── multi_lane_forecasting/
 │
-├── 📁 MPC_Controller
-│   ├── optimization/
-│   ├── queue_models/
-│   ├── constraints/
-│   └── simulations/
+├── MPC_Controller
+│ ├── optimization/
+│ ├── queue_models/
+│ ├── constraints/
+│ └── simulations/
 │
-├── 📁 Results
-│   ├── YOLO_evaluation/
-│   ├── Forecasting_graphs/
-│   └── MPC_vs_FixedTime/
+├── Results
+│ ├── YOLO_evaluation/
+│ ├── Forecasting_graphs/
+│ └── MPC_vs_FixedTime/
 │
 └── README.md
 
-Module Breakdown
-1️⃣ YOLOv12 Vehicle Detection
 
-Trained on top-view traffic dataset
+## Module Breakdown
 
-YOLOv12 chosen for highest accuracy
+### 1. YOLOv12 Vehicle Detection
+- Trained on top-view traffic dataset
+- YOLOv12 chosen for highest accuracy
+- Key improvements:
+  - Area Attention (A²)
+  - R-ELAN modules
+  - Better spatial-context modeling
 
-Key improvements:
+**Performance Comparison**
 
-Area Attention (A²)
+| Model   | Precision | Recall | mAP50 |
+|---------|-----------|--------|-------|
+| YOLOv8  | 0.929     | 0.918  | 0.975 |
+| YOLOv11 | 0.917     | 0.939  | 0.974 |
+| YOLOv12 | 0.932     | 0.915  | 0.977 |
 
-R-ELAN modules
+### 2. Bidirectional LSTM Traffic Forecasting
+- Dataset: I-94 Traffic Volume
+- Prediction horizon: 2 hours (5-min resolution)
 
-Better spatial-context modeling
+| Model               | MAE     | RMSE    |
+|--------------------|---------|---------|
+| MODEL-1 (Stacked LSTM) | 276.75  | 449.40  |
+| MODEL-2 (Bi-LSTM)      | 236.02  | 431.39  |
+| MODEL-3 (Deep LSTM)    | 241.64  | 437.88  |
 
-Performance Comparison
+- Bi-LSTM demonstrated the best forecasting performance.
 
-Model	Precision	Recall	mAP50
-YOLOv8	0.929	0.918	0.975
-YOLOv11	0.917	0.939	0.974
-YOLOv12	0.932	0.915	0.977
-2️⃣ Bidirectional LSTM Traffic Forecasting
+### 3. Model Predictive Control (MPC)
+- MPC uses:
+  - Store-and-Forward (SF) queue model
+  - LSTM-predicted inflows
+  - Safety/time constraints
+  - Switching penalties to reduce cycle disturbance
 
-Dataset: I-94 Traffic Volume
-Prediction horizon: 2 hours (5-min resolution)
+**MPC vs. Fixed-Time Results**
 
-Model	MAE	RMSE
-MODEL-1 (Stacked LSTM)	276.75	449.40
-MODEL-2 (Bi-LSTM)	236.02	431.39
-MODEL-3 (Deep LSTM)	241.64	437.88
+| Metric           | MPC     | Fixed-Time |
+|-----------------|---------|------------|
+| Avg Queue Length | 63.60   | 88.20      |
+| Total Delay (veh-sec) | 167,493 | 225,799 |
+| Phase Switches   | 3.5     | 13.5       |
 
-✔ Bi-LSTM demonstrated the best forecasting performance.
+- MPC significantly reduces congestion and unnecessary switching.
 
-3️⃣ Model Predictive Control (MPC)
+## Installation & Setup
 
-MPC uses:
-
-Store-and-Forward (SF) queue model
-
-LSTM-predicted inflows
-
-Safety/time constraints
-
-Switching penalties to reduce cycle disturbance
-
-MPC vs. Fixed-Time Results
-
-Metric	MPC	Fixed-Time
-Avg Queue Length	63.60	88.20
-Total Delay (veh-sec)	167,493	225,799
-Phase Switches	3.5	13.5
-
-✔ MPC significantly reduces congestion and unnecessary switching.
-
-⚙ Installation & Setup
-1. Clone the Repository
+1. **Clone the Repository**
+```bash
 git clone https://github.com/tekksick/Proactive_Intelligent_Traffic_Control_system.git
 cd Proactive_Intelligent_Traffic_Control_system
-
-2. Install Dependencies
-pip install -r requirements.txt
-
-▶️ Running the Modules
-Run YOLOv12 Inference
-python YOLO_Vehicle_Detection/inference/detect.py --weights yolov12.pt --source sample_video.mp4
-
-Run LSTM Training
-python Traffic_Forecasting_LSTM/model_training/train_lstm.py
-
-Run MPC Controller
-python MPC_Controller/run_mpc.py
-
-📈 Results Summary
-
-YOLOv12 achieves state-of-the-art detection accuracy
-
-Bi-LSTM provides superior multi-step forecasting
-
-MPC reduces queue length, waiting time, and switching frequency
-
-End-to-end system outperforms traditional controllers clearly
-
-🧭 Future Enhancements
-
-DeepSORT + YOLO for multi-object tracking
-
-Max-Pressure control integration with MPC
-
-Deployment on Jetson Nano or edge hardware
-
-Multi-intersection city-scale simulations
-
-V2I and connected-vehicle integration
-
-📚 Citation
-
-If you use this work, cite the authors:
-
-<Will be updated after publication>
-
-⭐ Acknowledgments
-
-This research is guided by Dr. Ayan Mondal (Senior Member, IEEE)
-and contributes to ongoing Intelligent Transportation Systems (ITS) advancements.
